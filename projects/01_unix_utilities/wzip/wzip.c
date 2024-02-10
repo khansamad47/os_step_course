@@ -12,20 +12,20 @@ int main(int argc, char* argv[])
         FILE* filePtr = fopen(argv[i],"r");
         int buffer = fgetc(filePtr);
         int character = buffer;
-        int counter = 0;
+        int counter = 1;
         while (EOF != buffer)
         {
+            buffer = fgetc(filePtr);
             if (buffer == character)
             {
                 counter++;
             }
             else {
                 fwrite(&counter,  4, 1, stdout);
-                fwrite(&character,1, 1, stdout);
+                fwrite((unsigned char*)&character,1, 1, stdout);
                 character = buffer;
                 counter = 1;
             }
-            buffer = fgetc(filePtr);
         }
         fclose(filePtr);
     }
