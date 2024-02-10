@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
             FILE* filePtr = fopen(argv[i],"r");
             if (filePtr == NULL)
             {
-                printf("wgrep: failed to open %s\n", argv[i]);
+                printf("wgrep: cannot open file\n");
                 return 1;
             }
             printMatches(filePtr, argv[1]);
