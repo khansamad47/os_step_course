@@ -1,4 +1,11 @@
 #include <stdio.h>
+#include <stdbool.h>
+
+void writeToOutput(int counter, int character)
+{
+    fwrite(&counter,  4, 1, stdout);
+    fwrite((unsigned char*)&character,1, 1, stdout);
+}
 
 int main(int argc, char* argv[])
 {
@@ -7,27 +14,34 @@ int main(int argc, char* argv[])
         printf("wzip: file1 [file2 ...]\n");
         return 1;
     }
+    bool prevIsValid = false;
+    int buffer;
+    int prev;
+    int counter = 1;
     for (size_t i = 1; i != argc; ++i)
     {
         FILE* filePtr = fopen(argv[i],"r");
-        int buffer = fgetc(filePtr);
-        int character = buffer;
-        int counter = 1;
-        while (EOF != buffer)
+        while ((buffer = fgetc(filePtr)) != EOF)
         {
-            buffer = fgetc(filePtr);
-            if (buffer == character)
+            if (prevIsValid)
             {
-                counter++;
+                if (buffer == prev)
+                {
+                    counter++;
+                }
+                else {
+                    writeToOutput(counter, prev);
+                    counter = 1;
+                }
             }
-            else {
-                fwrite(&counter,  4, 1, stdout);
-                fwrite((unsigned char*)&character,1, 1, stdout);
-                character = buffer;
-                counter = 1;
-            }
+            prev = buffer; // Last line
+            prevIsValid = true;
         }
         fclose(filePtr);
+    }
+    if (prevIsValid)
+    {
+        writeToOutput(counter, prev);
     }
     return 0;
 }
