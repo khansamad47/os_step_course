@@ -1,10 +1,8 @@
-binaries = wzip wunzip
+binaries = wunzip
 
-.PHONY: wzip wunzip
+.PHONY: wunzip
 
-wzip:
-	gcc -Werror -Wall -o wzip wzip.c
 wunzip:
-	gcc -Werror -Wall -o wunzip wunzip.c
+	gcc -g -Werror -Wall -o wunzip wunzip.c
 clean:
 	rm -rf *.o $(binaries)

@@ -10,14 +10,14 @@ int main (int argc, char* argv[])
     for (size_t i = 1; i != argc; ++i)
     {
         FILE* filePtr = fopen(argv[i],"rb");
-        char buffer[5]; // 5 byte buffer
+        unsigned char buffer[5]; // 5 byte buffer
         while(fread(buffer, 5, 1, filePtr))
         {
             int count = *((int *)buffer);
             char character = buffer[4];
             for(size_t i = 0; i != count; ++i)
             {
-                printf("%s", &character);
+                printf("%c", character);
             }
         }
         fclose(filePtr);
