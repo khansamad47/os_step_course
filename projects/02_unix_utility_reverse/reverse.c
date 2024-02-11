@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 struct Node {
     char* data;
@@ -19,24 +22,36 @@ int main(int argc, char* argv[])
     }
     FILE * inputStream = stdin;
     FILE * outputStream = stdout;
-    if (argc == 3)
-    {
-        if (0 == strcmp(argv[1],argv[2]))
-        {
-            fprintf(stderr, "input and output file must differ");
-            exit(1);
-        }
-        if((outputStream = fopen(argv[2],"r")) == NULL)
-        {
-            fprintf(stderr, "error: cannot open file '%s'\n", argv[2]);
-            exit(1);
-        }
-    }
     if (argc >= 2)
     {
         if ((inputStream = fopen(argv[1],"r")) == NULL)
         {
-            fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
+            fprintf(stderr, "reverse: cannot open file '%s'\n", argv[1]);
+            exit(1);
+        }
+    }
+    if (argc == 3)
+    {
+        if (0 == strcmp(argv[1],argv[2]))
+        {
+            fprintf(stderr, "reverse: input and output file must differ\n");
+            exit(1);
+        }
+        // Check if the two files refer to the same one
+        struct stat file1;
+        struct stat file2;
+        if (0 == stat(argv[1], &file1) && 0 == stat(argv[2], &file2))
+        {
+            if (file1.st_ino == file2.st_ino)
+            {
+                fprintf(stderr, "reverse: input and output file must differ\n");
+                exit(1);
+            }
+        }
+        
+        if((outputStream = fopen(argv[2],"w")) == NULL)
+        {
+            fprintf(stderr, "reverse: cannot open file '%s'\n", argv[2]);
             exit(1);
         }
     }
