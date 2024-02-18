@@ -33,6 +33,18 @@ Contains homework and projects for OSTEP course. Links to the original repo is g
 * `exec()` is useful when you want to run not the same program but something else. That other program can be passed at arguments to exec. However exec is also not so simple because it hijacks the current process and overrides the current static data, code segment, heap and stack are reinitialized. An so exec call never returns (as there is nothing left to return to).
 
 ### How does bash shell execute program
-```$ ls -a > out.file```
-Shell first calls fork which forks the bash shell. The main shell waits while the child shell sets the stdout redirection. Next the child shell calls `exec`
+
+`$ ls -a > out.file`
+
+Shell first calls fork which forks the bash shell. The main shell waits while the child shell sets the stdout redirection. 
+Next the child shell calls `exec`
 and loads the `ls` program into itself setting input arguments. The child process is now running `ls` it will complete and return control to the parent process.
+
+### Orphan and Zombie Process
+An orphan process is a process whose parent has exited yet it execute. It will be adopted by the init process and will be reaped when they exit.
+How to reap a process? Call wait on it by parent and read its return code, that clears up its record in the process table in the kernal.
+Zombies process is a process which has finished but not yet been waited/reaped by exisitng parent. Parent might be hung. I think its normal for a process
+to be zombie for a few seconds.
+
+### Homework
+    - Simulate `fork.py` -- pretty simple
